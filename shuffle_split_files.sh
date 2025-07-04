@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# Location of split markdown files. Uses BASE_DIR or the current directory.
-BASE_DIR="${BASE_DIR:-$(pwd)}"
-SPLIT_DIR="$BASE_DIR/Split"
+# Exit on error, undefined variables, and pipe failures
+set -euo pipefail
+
+# Base directory setup
+: "${BASE_DIR:=$(dirname "$(realpath "$0")")}"
+SPLIT_DIR="${1:-$BASE_DIR/Split}"
 
 # Collect all part files
 files=("$SPLIT_DIR"/part_*.md)
@@ -16,7 +19,7 @@ if [ "$count" -eq 0 ]; then
 fi
 
 # Create an array of shuffled indices from 1 to count
-shuffled_indices=($(shuf -i 1-$count))
+mapfile -t shuffled_indices < <(shuf -i 1-"$count")
 
 # Temporary rename files to avoid overwrites
 for i in "${!files[@]}"; do

@@ -1,13 +1,12 @@
 #!/bin/bash
 
-# Base directory for all generated files. Defaults to the current directory.
-BASE_DIR="${BASE_DIR:-$(pwd)}"
+# Exit on error, undefined variables, and pipe failures
+set -euo pipefail
 
-# Input file to split
-INPUT_FILE="$BASE_DIR/Merged/merged_output.md"
-
-# Output directory for split files
-OUTPUT_DIR="$BASE_DIR/Split"
+# Base directory setup
+: "${BASE_DIR:=$(dirname "$(realpath "$0")")}"
+INPUT_FILE="${1:-$BASE_DIR/Merged/merged_output.md}"
+OUTPUT_DIR="${2:-$BASE_DIR/Split}"
 
 # Max characters per split file
 MAX_CHARS=20000
