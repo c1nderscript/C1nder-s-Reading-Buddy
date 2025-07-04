@@ -43,78 +43,26 @@ This repository provides a simple pipeline to convert a folder of documents into
    ```bash
    pandoc --version
    ```
-   Optionally install kindlegen and ensure it is in your PATH.
 
-   Set the ``KB_DIR`` environment variable or edit ``ingest_and_convert.py`` if your knowledge base lives elsewhere.
-   Set ``BASE_DIR`` to change where output directories like ``Split`` and ``Kindle`` are created. It defaults to the current directory.
+   Optionally install kindlegen and ensure it is in your PATH. Set the `KB_DIR` environment variable or edit `ingest_and_convert.py` if your knowledge base lives elsewhere.
 
-   🚀 Usage
-   Run the full pipeline with:
+3. Make the scripts executable:
 
    ```bash
    chmod +x ingest_and_convert.sh split_markdown.sh shuffle_split_files.sh convert_to_kindle.sh
-   BASE_DIR=/path/to/workdir ./ingest_and_convert.sh
    ```
-   What happens?
-   Scan & Convert
-   The Python script scans your knowledgebase directory (defaults to ``~/Documents/KnowledgeBase`` or the value of ``KB_DIR``), converts PDFs, DOCX, TXT, MDX, and Markdown to Markdown files in Ingest/.
-   It skips files already processed by referencing Logs/processed_files.log.
-   
-   Split Markdown
-   Large markdown files are split into ~5,000 character chunks saved into Split/.
-   
-   Shuffle Chunks
-   The chunk files are shuffled randomly to vary reading order.
-   
-   Convert to Kindle Format
-   Markdown chunks in Split/ are converted to .mobi (if kindlegen is present) or .epub in Kindle/.
-   
-   🗂️ Tracking Processed Files
-   The system keeps a log of all processed source files in Logs/processed_files.log.
-   
-   This prevents re-processing unchanged files on subsequent runs.
-   
-   To reset processing, clear or remove the log file.
-   
-   ⚠️ Notes
-   Large PDFs or complex documents may have imperfect markdown conversion; manual cleanup may be needed.
-   
-   .mdx files will be treated as markdown but JSX components are not specially handled.
-   
-   Ensure pandoc and kindlegen are executable from your shell.
-   
-   🧩 Extending & Customization
-   Add support for other file types by extending SUPPORTED_EXTS in ingest_and_convert.py.
-   
-   Modify chunk size by editing split_markdown.sh.
-   
-   Add error handling and detailed logging as needed.
-   
-   🆘 Troubleshooting
-   If conversions fail, try running pandoc commands manually on problem files to debug.
-   
-   Verify PATH settings if pandoc or kindlegen commands are not found.
-   
-   Check file permissions on source and output directories.xxxxxxxxxx bashCopyEditMerged/merged_output.md
-   ```
-
-   ```
-3. Optionally install `kindlegen` and ensure it is in your `PATH`.
-4. Adjust the path inside `ingest_and_convert.py` if your knowledgebase is located elsewhere. The default is `/home/$USER/Documents/K_Knowledge_Base`.
 
 ## Usage
 
 Run the full pipeline with:
-
 ```bash
-chmod +x ingest_and_convert.sh split_markdown.sh shuffle_split_files.sh convert_to_kindle.sh
-BASE_DIR=/path/to/workdir ./ingest_and_convert.sh
+./ingest_and_convert.sh
 ```
 
 ### What Happens?
 
-1. **Scan & Convert** – `ingest_and_convert.py` scans your knowledgebase (default `/home/$USER/Documents/K_Knowledge_Base`) and converts supported files to Markdown in `Ingest/`.
-2. **Split Markdown** – Large Markdown files are split into chunks saved in `Split/` using `split_markdown.sh`.
+1. **Scan & Convert** – `ingest_and_convert.py` scans your knowledgebase directory (defaults to `~/Documents/KnowledgeBase` or the value of `KB_DIR`), converts PDFs, DOCX, TXT, MDX, and Markdown to Markdown files in `Ingest/`.
+2. **Split Markdown** – Large Markdown files are split into ~20,000-character chunks saved in `Split/` using `split_markdown.sh`.
 3. **Shuffle Chunks** – The chunk files are shuffled randomly by `shuffle_split_files.sh`.
 4. **Convert to Kindle Format** – Markdown chunks are converted to `.mobi` (if `kindlegen` is present) or `.epub` in `Kindle/` via `convert_to_kindle.sh`.
 
