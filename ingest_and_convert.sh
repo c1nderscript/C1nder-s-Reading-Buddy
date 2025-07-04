@@ -15,11 +15,11 @@ python3 ingest_and_convert.py
 
 echo "Step 2: Split large markdown files into chunks"
 for mdfile in "$INGEST_DIR"/*.md; do
-  ./split_markdown.sh "$mdfile"
+  ./split_output.sh "$mdfile"
 done
 
 echo "Step 3: Shuffle chunked markdown files"
-./shuffle_split_files.sh
+./shuffle.sh
 
 echo "Step 4: Convert chunked markdown files to Kindle format"
 ./convert_to_kindle.sh
