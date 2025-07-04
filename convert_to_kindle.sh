@@ -1,7 +1,9 @@
 #!/bin/bash
 
-SPLIT_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Split"
-KINDLE_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Kindle"
+# Use BASE_DIR if provided, otherwise default to the current directory
+BASE_DIR="${BASE_DIR:-$(pwd)}"
+SPLIT_DIR="$BASE_DIR/Split"
+KINDLE_DIR="$BASE_DIR/Kindle"
 
 mkdir -p "$KINDLE_DIR"
 

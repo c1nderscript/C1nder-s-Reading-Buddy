@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# Fixed input file path
-INPUT_FILE="/home/cinder/Documents/C_Scripts/Markdown Merger/Merged/merged_output.md"
+# Base directory for all generated files. Defaults to the current directory.
+BASE_DIR="${BASE_DIR:-$(pwd)}"
+
+# Input file to split
+INPUT_FILE="$BASE_DIR/Merged/merged_output.md"
 
 # Output directory for split files
-OUTPUT_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Split"
+OUTPUT_DIR="$BASE_DIR/Split"
 
 # Max characters per split file
 MAX_CHARS=20000
