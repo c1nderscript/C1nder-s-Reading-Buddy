@@ -1,13 +1,17 @@
 #!/bin/bash
+set -e
 
-# Fixed input file path
-INPUT_FILE="/home/cinder/Documents/C_Scripts/Markdown Merger/Merged/merged_output.md"
+# Determine repository root based on this script's location, allow override
+REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+
+# Target markdown file (argument or environment variable)
+INPUT_FILE="${1:-${INPUT_FILE:-"$REPO_ROOT/Merged/merged_output.md"}}"
 
 # Output directory for split files
-OUTPUT_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Split"
+OUTPUT_DIR="${SPLIT_DIR:-"$REPO_ROOT/Split"}"
 
 # Max characters per split file
-MAX_CHARS=20000
+MAX_CHARS="${MAX_CHARS:-20000}"
 
 if [ ! -f "$INPUT_FILE" ]; then
   echo "File not found: $INPUT_FILE"
@@ -21,7 +25,7 @@ current_chunk=""
 
 while IFS= read -r line || [ -n "$line" ]; do
   current_chunk+="$line"$'\n'
-  if [ ${#current_chunk} -ge $MAX_CHARS ]; then
+  if [ ${#current_chunk} -ge "$MAX_CHARS" ]; then
     printf -v filename "%s/part_%03d.md" "$OUTPUT_DIR" "$split_index"
     echo "$current_chunk" > "$filename"
     echo "Created $filename"
