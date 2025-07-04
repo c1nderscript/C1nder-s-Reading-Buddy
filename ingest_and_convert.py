@@ -3,6 +3,8 @@ import subprocess
 import sys
 from pathlib import Path
 from datetime import datetime
+import json
+import hashlib
 
 # Configuration
 # The knowledge base directory can be overridden with the ``KB_DIR``
@@ -10,7 +12,7 @@ from datetime import datetime
 KB_DIR = Path(os.environ.get("KB_DIR", Path.home() / "Documents/KnowledgeBase"))
 INGEST_DIR = Path("./Ingest")
 LOG_DIR = Path("./Logs")
-PROCESSED_LOG = LOG_DIR / "processed_files.log"
+LEDGER_PATH = Path("ledger.json")
 
 # Supported file extensions and their pandoc target
 SUPPORTED_EXTS = {
@@ -21,21 +23,33 @@ SUPPORTED_EXTS = {
     ".txt": "markdown",
 }
 
-def load_processed():
-    if not PROCESSED_LOG.exists():
-        return set()
-    with PROCESSED_LOG.open("r") as f:
-        return set(line.strip() for line in f.readlines())
+def load_ledger():
+    if LEDGER_PATH.exists():
+        try:
+            with LEDGER_PATH.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            data = {}
+    else:
+        data = {}
+    data.setdefault("file_hashes", {})
+    data.setdefault("last_run", None)
+    data.setdefault("epub_count", 0)
+    return data
 
-def log_processed(file_path, error=False):
-    with PROCESSED_LOG.open("a") as f:
-        timestamp = datetime.utcnow().isoformat()
-        if error:
-            f.write(f"{file_path}\t{timestamp}\tERROR\n")
-        else:
-            f.write(f"{file_path}\t{timestamp}\n")
+def save_ledger(data):
+    data["last_run"] = datetime.utcnow().isoformat()
+    with LEDGER_PATH.open("w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
 
-def convert_to_markdown(src_path: Path, dest_path: Path):
+def compute_hash(path: Path) -> str:
+    hash_obj = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            hash_obj.update(chunk)
+    return hash_obj.hexdigest()
+
+def convert_to_markdown(src_path: Path, dest_path: Path) -> bool:
     # For md/mdx/txt just copy
     if src_path.suffix in [".md", ".mdx", ".txt"]:
         dest_path.write_text(src_path.read_text(encoding="utf-8"), encoding="utf-8")
@@ -58,14 +72,14 @@ def convert_to_markdown(src_path: Path, dest_path: Path):
                 file=sys.stderr,
             )
             if attempts >= 3:
-                log_processed(str(src_path), error=True)
                 return False
 
 def main():
     INGEST_DIR.mkdir(exist_ok=True)
     LOG_DIR.mkdir(exist_ok=True)
 
-    processed_files = load_processed()
+    ledger = load_ledger()
+    file_hashes = ledger["file_hashes"]
     new_processed = 0
 
     for root, _, files in os.walk(KB_DIR):
@@ -73,7 +87,9 @@ def main():
             filepath = Path(root) / filename
             if filepath.suffix.lower() not in SUPPORTED_EXTS:
                 continue
-            if str(filepath) in processed_files:
+
+            file_hash = compute_hash(filepath)
+            if file_hashes.get(str(filepath)) == file_hash:
                 print(f"Skipping already processed: {filepath}")
                 continue
 
@@ -84,9 +100,10 @@ def main():
             print(f"Processing: {filepath}")
             success = convert_to_markdown(filepath, dest_path)
             if success:
-                log_processed(str(filepath))
+                file_hashes[str(filepath)] = file_hash
                 new_processed += 1
 
+    save_ledger(ledger)
     print(f"Conversion complete. {new_processed} new files processed.")
 
 if __name__ == "__main__":

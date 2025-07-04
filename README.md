@@ -57,7 +57,7 @@ This repository provides a simple pipeline to convert a folder of documents into
    What happens?
    Scan & Convert
    The Python script scans your knowledgebase directory (defaults to ``~/Documents/KnowledgeBase`` or the value of ``KB_DIR``), converts PDFs, DOCX, TXT, MDX, and Markdown to Markdown files in Ingest/.
-   It skips files already processed by referencing Logs/processed_files.log.
+   It skips files already processed by consulting `ledger.json`.
    
    Split Markdown
    Large markdown files are split into ~5,000 character chunks saved into Split/.
@@ -69,11 +69,11 @@ This repository provides a simple pipeline to convert a folder of documents into
    Markdown chunks in Split/ are converted to .mobi (if kindlegen is present) or .epub in Kindle/.
    
    🗂️ Tracking Processed Files
-   The system keeps a log of all processed source files in Logs/processed_files.log.
-   
+   Processed source files are tracked in a JSON ledger (`ledger.json`) that stores file hashes and timestamps.
+
    This prevents re-processing unchanged files on subsequent runs.
-   
-   To reset processing, clear or remove the log file.
+
+   To reset processing, delete `ledger.json`.
    
    ⚠️ Notes
    Large PDFs or complex documents may have imperfect markdown conversion; manual cleanup may be needed.
@@ -119,7 +119,7 @@ chmod +x ingest_and_convert.sh split_output.sh shuffle.sh convert_to_kindle.sh
 
 ## Tracking Processed Files
 
-The system keeps a log of all processed source files in `Logs/processed_files.log`. This prevents re-processing unchanged files on subsequent runs. To reset processing, clear or remove the log file.
+The system keeps a JSON ledger called `ledger.json` that records file hashes and the last run time. This prevents re-processing unchanged files on subsequent runs. To reset processing, delete `ledger.json`.
 
 ## Troubleshooting
 
