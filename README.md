@@ -76,3 +76,15 @@ The system keeps a log of all processed source files in `Logs/processed_files.lo
 - Verify `PATH` settings if `pandoc` or `kindlegen` commands are not found.
 - Check file permissions on source and output directories.
 
+
+## Running Tests
+
+To verify the scripts in this repository are executable, run the automated test suite:
+
+```bash
+pip install -r requirements.txt  # if you have additional dependencies
+pytest
+```
+
+The tests check that each workflow script has execute permissions so the CI pipeline can run them correctly.
+
