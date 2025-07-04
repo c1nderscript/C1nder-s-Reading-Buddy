@@ -61,21 +61,20 @@ Run the full pipeline with:
 
 ### What Happens?
 
-1. **Scan & Convert** – `ingest_and_convert.py` scans your knowledgebase directory (defaults to `~/Documents/KnowledgeBase` or the value of `KB_DIR`), converts PDFs, DOCX, TXT, MDX, and Markdown to Markdown files in `Ingest/`.
+1. **Scan & Convert** – `ingest_and_convert.py` scans your knowledgebase directory (defaults to `~/Documents/KnowledgeBase` or the value of `KB_DIR`), converts PDFs, DOCX, TXT, MDX, and Markdown to Markdown files in `Ingest/`. It skips files already processed by consulting `ledger.json`.
 2. **Split Markdown** – Large Markdown files are split into ~20,000-character chunks saved in `Split/` using `split_markdown.sh`.
 3. **Shuffle Chunks** – The chunk files are shuffled randomly by `shuffle_split_files.sh`.
 4. **Convert to Kindle Format** – Markdown chunks are converted to `.mobi` (if `kindlegen` is present) or `.epub` in `Kindle/` via `convert_to_kindle.sh`.
 
 ## Tracking Processed Files
 
-The system keeps a log of all processed source files in `Logs/processed_files.log`. This prevents re-processing unchanged files on subsequent runs. To reset processing, clear or remove the log file.
+The system keeps a JSON ledger called `ledger.json` that records file hashes and the last run time. This prevents re-processing unchanged files on subsequent runs. To reset processing, delete `ledger.json`.
 
 ## Troubleshooting
 
 - If conversions fail, try running `pandoc` commands manually on problem files to debug.
 - Verify `PATH` settings if `pandoc` or `kindlegen` commands are not found.
 - Check file permissions on source and output directories.
-
 
 ## Running Tests
 
