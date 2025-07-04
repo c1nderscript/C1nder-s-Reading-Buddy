@@ -1,0 +1,15 @@
+# Generated output
+Ingest/
+Split/
+Kindle/
+Logs/
+Merged/
+*.epub
+*.mobi
+*.log
+
+# OS / editor junk
+.DS_Store
+*.swp
+.idea/
+.vscode/

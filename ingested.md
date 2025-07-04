@@ -1,0 +1,7 @@
+- Discord API Docs
+- Github Docs
+- Rust language docs
+- Python docs
+- Go Docs
+- Redis docs
+- Trello API docs
