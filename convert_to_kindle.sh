@@ -1,7 +1,12 @@
 #!/bin/bash
+set -e
 
-SPLIT_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Split"
-KINDLE_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Kindle"
+# Determine repository root from this script's location, allow override
+REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+
+# Directories for input markdown chunks and Kindle output
+SPLIT_DIR="${SPLIT_DIR:-"$REPO_ROOT/Split"}"
+KINDLE_DIR="${KINDLE_DIR:-"$REPO_ROOT/Kindle"}"
 
 mkdir -p "$KINDLE_DIR"
 

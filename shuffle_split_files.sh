@@ -1,6 +1,11 @@
 #!/bin/bash
+set -e
 
-SPLIT_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Split"
+# Determine repository root from this script's location, allow override
+REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+
+# Directory containing split markdown files
+SPLIT_DIR="${SPLIT_DIR:-"$REPO_ROOT/Split"}"
 
 # Collect all part files
 files=("$SPLIT_DIR"/part_*.md)
@@ -14,7 +19,7 @@ if [ "$count" -eq 0 ]; then
 fi
 
 # Create an array of shuffled indices from 1 to count
-shuffled_indices=($(shuf -i 1-$count))
+mapfile -t shuffled_indices < <(shuf -i 1-"$count")
 
 # Temporary rename files to avoid overwrites
 for i in "${!files[@]}"; do
