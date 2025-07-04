@@ -5,7 +5,9 @@ from pathlib import Path
 from datetime import datetime
 
 # Configuration
-KB_DIR = Path("/home/cinder/Documents/K_Knowledge_Base")
+# The knowledge base directory can be overridden with the ``KB_DIR``
+# environment variable. It defaults to ``~/Documents/KnowledgeBase``.
+KB_DIR = Path(os.environ.get("KB_DIR", Path.home() / "Documents/KnowledgeBase"))
 INGEST_DIR = Path("./Ingest")
 LOG_DIR = Path("./Logs")
 PROCESSED_LOG = LOG_DIR / "processed_files.log"
