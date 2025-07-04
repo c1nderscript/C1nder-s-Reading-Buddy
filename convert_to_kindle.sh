@@ -15,6 +15,13 @@ else
   USE_KINDLEGEN=false
 fi
 
+# Ensure pandoc is installed
+if ! command -v pandoc >/dev/null 2>&1; then
+  echo "pandoc is required but was not found."
+  echo "Install it from https://pandoc.org/installing.html and ensure it is in your PATH."
+  exit 1
+fi
+
 for mdfile in "$SPLIT_DIR"/*.md; do
   base_name=$(basename "$mdfile" .md)
   if [ "$USE_KINDLEGEN" = true ]; then
