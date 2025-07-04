@@ -1,6 +1,8 @@
 #!/bin/bash
 
-SPLIT_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Split"
+# Location of split markdown files. Uses BASE_DIR or the current directory.
+BASE_DIR="${BASE_DIR:-$(pwd)}"
+SPLIT_DIR="$BASE_DIR/Split"
 
 # Collect all part files
 files=("$SPLIT_DIR"/part_*.md)

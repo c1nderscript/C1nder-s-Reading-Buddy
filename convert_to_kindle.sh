@@ -1,7 +1,9 @@
 #!/bin/bash
 
-SPLIT_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Split"
-KINDLE_DIR="/home/cinder/Documents/C_Scripts/Markdown Merger/Kindle"
+# Use BASE_DIR if provided, otherwise default to the current directory
+BASE_DIR="${BASE_DIR:-$(pwd)}"
+SPLIT_DIR="$BASE_DIR/Split"
+KINDLE_DIR="$BASE_DIR/Kindle"
 
 mkdir -p "$KINDLE_DIR"
 
@@ -11,6 +13,13 @@ if command -v kindlegen >/dev/null 2>&1; then
 else
   echo "kindlegen not found, will convert to .epub instead of .mobi"
   USE_KINDLEGEN=false
+fi
+
+# Ensure pandoc is installed
+if ! command -v pandoc >/dev/null 2>&1; then
+  echo "pandoc is required but was not found."
+  echo "Install it from https://pandoc.org/installing.html and ensure it is in your PATH."
+  exit 1
 fi
 
 for mdfile in "$SPLIT_DIR"/*.md; do
