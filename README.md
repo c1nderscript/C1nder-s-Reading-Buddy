@@ -57,7 +57,7 @@
    pandoc --version
    Optionally install kindlegen and ensure it is in your PATH.
    
-   Adjust paths inside ingest_and_convert.py if your knowledgebase is located elsewhere.
+   Set the ``KB_DIR`` environment variable or edit ``ingest_and_convert.py`` if your knowledge base lives elsewhere.
    
    🚀 Usage
    Run the full pipeline with:
@@ -68,7 +68,7 @@
    ./ingest_and_convert.sh
    What happens?
    Scan & Convert
-   The Python script scans your knowledgebase directory (default /home/cinder/Documents/K_Knowledge_Base), converts PDFs, DOCX, TXT, MDX, and Markdown to Markdown files in Ingest/.
+   The Python script scans your knowledgebase directory (defaults to ``~/Documents/KnowledgeBase`` or the value of ``KB_DIR``), converts PDFs, DOCX, TXT, MDX, and Markdown to Markdown files in Ingest/.
    It skips files already processed by referencing Logs/processed_files.log.
    
    Split Markdown
