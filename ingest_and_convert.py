@@ -27,27 +27,39 @@ def load_processed():
     with PROCESSED_LOG.open("r") as f:
         return set(line.strip() for line in f.readlines())
 
-def log_processed(file_path):
+def log_processed(file_path, error=False):
     with PROCESSED_LOG.open("a") as f:
-        f.write(f"{file_path}\t{datetime.utcnow().isoformat()}\n")
+        timestamp = datetime.utcnow().isoformat()
+        if error:
+            f.write(f"{file_path}\t{timestamp}\tERROR\n")
+        else:
+            f.write(f"{file_path}\t{timestamp}\n")
 
 def convert_to_markdown(src_path: Path, dest_path: Path):
     # For md/mdx/txt just copy
     if src_path.suffix in [".md", ".mdx", ".txt"]:
         dest_path.write_text(src_path.read_text(encoding="utf-8"), encoding="utf-8")
         return True
-    # For pdf/docx use pandoc
-    try:
-        subprocess.run(
-            ["pandoc", str(src_path), "-o", str(dest_path)],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"Error converting {src_path}: {e.stderr.decode()}", file=sys.stderr)
-        return False
+    # For pdf/docx use pandoc with retry logic
+    attempts = 0
+    while attempts < 3:
+        try:
+            subprocess.run(
+                ["pandoc", str(src_path), "-o", str(dest_path)],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            return True
+        except subprocess.CalledProcessError as e:
+            attempts += 1
+            print(
+                f"Error converting {src_path} (attempt {attempts}): {e.stderr.decode()}",
+                file=sys.stderr,
+            )
+            if attempts >= 3:
+                log_processed(str(src_path), error=True)
+                return False
 
 def main():
     INGEST_DIR.mkdir(exist_ok=True)
