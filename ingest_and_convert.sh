@@ -13,6 +13,7 @@ mkdir -p "$INGEST_DIR" "$SPLIT_DIR" "$KINDLE_DIR"
 echo "Step 1: Ingest and convert files to Markdown"
 python3 ingest_and_convert.py
 
+
 echo "Step 2: Merge markdown files"
 ./merge.sh
 
@@ -21,6 +22,7 @@ echo "Step 3: Split merged markdown file into chunks"
 
 echo "Step 4: Shuffle chunked markdown files"
 ./shuffle_split_files.sh
+
 
 echo "Step 5: Convert chunked markdown files to Kindle format"
 ./convert_to_kindle.sh
