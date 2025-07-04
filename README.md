@@ -31,7 +31,7 @@ This repository provides a simple pipeline to convert a folder of documents into
 ## Prerequisites
 
 - Python 3
-- [Pandoc](https://pandoc.org/installing.html) for file conversions
+- [Pandoc](https://pandoc.org/installing.html) for file conversions (required; `convert_to_kindle.sh` will exit if `pandoc` is missing)
 - `kindlegen` (optional, recommended for MOBI output)
 - Unix-like shell environment (Linux, macOS, WSL)
 
