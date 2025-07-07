@@ -13,3 +13,4 @@ Merged/
 *.swp
 .idea/
 .vscode/
+.venv/

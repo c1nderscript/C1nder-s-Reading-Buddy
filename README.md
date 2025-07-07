@@ -5,7 +5,8 @@ This repository provides a modular pipeline for consolidating a knowledge base i
 ## Features
 
 - Recursively scan subfolders under the knowledge base directory.
-- Convert Markdown (`.md`/`.mdx`), text (`.txt`), DOCX and PDF files to PDF via `pandoc`.
+- Convert Markdown (`.md`/`.mdx`) directly to PDF using FPDF.
+- Convert text (`.txt`) and DOCX files to PDF via `pandoc`.
 - Merge all PDFs in a subfolder into a single file in `Merged/`.
 - Split merged PDFs into ~20,000 word chunks saved in `Chunks/`.
 - Track processed files in `ledger.json` to avoid duplicate work.
@@ -27,7 +28,7 @@ This repository provides a modular pipeline for consolidating a knowledge base i
 ## Prerequisites
 
 - Python 3
-- [pandoc](https://pandoc.org/installing.html)
+- [pandoc](https://pandoc.org/installing.html) for non-Markdown formats
 
 Run `./configure.sh` once to create a virtual environment and install the
 packages from `requirements.txt`.
@@ -37,7 +38,7 @@ packages from `requirements.txt`.
 source .venv/bin/activate
 ```
 
-Ensure `pandoc` is accessible in your `PATH`. Optionally set the environment variable `KB_DIR` to point to your knowledge base. The default is `/home/cinder/Documents/K_Knowledge_Base`.
+Ensure `pandoc` is accessible in your `PATH` for converting DOCX and text files. Markdown files are handled directly via FPDF, so no LaTeX engine is required. Optionally set the environment variable `KB_DIR` to point to your knowledge base. The default is `/home/cinder/Documents/K_Knowledge_Base`.
 
 ## Usage
 
