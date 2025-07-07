@@ -22,7 +22,13 @@ def markdown_to_pdf(src: Path, dest: Path) -> None:
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(True, margin=15)
-    pdf.set_font("Arial", size=12)
+    pdf.add_font(
+        "DejaVu",
+        "",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        uni=True,
+    )
+    pdf.set_font("DejaVu", size=12)
     for line in text.splitlines():
         pdf.multi_cell(0, 10, line)
     pdf.output(str(dest))
