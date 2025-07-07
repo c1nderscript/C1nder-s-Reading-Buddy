@@ -12,6 +12,21 @@ except ModuleNotFoundError:  # fall back for environments with PyPDF2 installed
     from PyPDF2 import PdfMerger, PdfReader
 from fpdf import FPDF
 
+
+def markdown_to_pdf(src: Path, dest: Path) -> None:
+    """Render a Markdown file to PDF using FPDF.
+
+    This avoids pandoc's default pdflatex dependency.
+    """
+    text = src.read_text(encoding="utf-8")
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_auto_page_break(True, margin=15)
+    pdf.set_font("Arial", size=12)
+    for line in text.splitlines():
+        pdf.multi_cell(0, 10, line)
+    pdf.output(str(dest))
+
 KB_DIR = Path(os.environ.get("KB_DIR", "/home/cinder/Documents/K_Knowledge_Base"))
 CONVERTED_DIR = Path("Converted")
 MERGED_DIR = Path("Merged")
@@ -61,9 +76,26 @@ def compute_hash(path: Path) -> str:
 # This helper mirrors the convert_file function in ingest_and_convert.py
 
 def convert_file(src: Path, dest: Path) -> bool:
-    if src.suffix.lower() == ".pdf":
+    """Convert a supported file to PDF.
+
+    Markdown and MDX files are rendered via :func:`markdown_to_pdf` to avoid
+    pandoc's requirement for a LaTeX engine. Other formats fall back to pandoc.
+    """
+
+    ext = src.suffix.lower()
+
+    if ext == ".pdf":
         dest.write_bytes(src.read_bytes())
         return True
+
+    if ext in {".md", ".mdx"}:
+        try:
+            markdown_to_pdf(src, dest)
+            return True
+        except Exception as e:  # noqa: BLE001
+            log(f"Conversion failed for {src}: {e}")
+            return False
+
     try:
         subprocess.run(["pandoc", str(src), "-o", str(dest)], check=True)
         return True
