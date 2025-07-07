@@ -122,11 +122,18 @@ def convert_file(src: Path, dest: Path) -> bool:
             log(f"Conversion failed for {src}: {e}")
             return False
 
+    tmp_md = dest.with_suffix(".tmp.md")
     try:
-        subprocess.run(["pandoc", str(src), "-o", str(dest)], check=True)
+        subprocess.run(
+            ["pandoc", str(src), "-t", "markdown", "-o", str(tmp_md)],
+            check=True,
+        )
+        markdown_to_pdf(tmp_md, dest)
+        tmp_md.unlink(missing_ok=True)
         return True
     except subprocess.CalledProcessError as e:
         log(f"Conversion failed for {src}: {e}")
+        tmp_md.unlink(missing_ok=True)
         return False
 
 
