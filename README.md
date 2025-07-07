@@ -47,12 +47,16 @@ Run the entire pipeline from the repository root:
 python orchestrate_all.py
 ```
 
-This will:
-1. Scan each subfolder in `KB_DIR` for new or modified files.
-2. Convert supported files to PDF (stored under `Converted/`).
-3. Merge all PDFs in each subfolder into `Merged/<folder>.pdf`.
-4. Split the merged PDF into 20k-word chunks placed in `Chunks/`.
-5. Update `ledger.json` and write logs to `Logs/workflow.log`.
+The script now prompts for:
+1. The full path to the folder of documents to convert.
+2. A base name for the merged PDF and its chunks.
+3. The output directory for the chunked files.
+
+It will then:
+1. Convert supported files in the chosen folder to PDF (stored under `Converted/`).
+2. Merge them into `Merged/<base_name>.pdf`.
+3. Split the merged PDF into 20k‑word chunks placed in the specified output directory.
+4. Update `ledger.json` and write logs to `Logs/workflow.log`.
 
 You can delete `ledger.json` to force a full reprocess.
 

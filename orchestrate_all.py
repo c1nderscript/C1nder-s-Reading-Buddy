@@ -105,7 +105,7 @@ def merge_pdfs(pdf_dir: Path, output_path: Path) -> None:
     log(f"Merged {len(pdf_files)} PDFs into {output_path}")
 
 
-def chunk_pdf(pdf_path: Path, folder_name: str) -> None:
+def chunk_pdf(pdf_path: Path, base_name: str) -> None:
     reader = PdfReader(str(pdf_path))
     text = " ".join(page.extract_text() or "" for page in reader.pages)
     words = text.split()
@@ -124,25 +124,38 @@ def chunk_pdf(pdf_path: Path, folder_name: str) -> None:
         pdf.set_auto_page_break(True, margin=15)
         pdf.set_font("Arial", size=12)
         pdf.multi_cell(0, 10, chunk_text)
-        out_path = CHUNK_DIR / f"{folder_name}_chunk_{chunk_idx:03d}.pdf"
+        out_path = CHUNK_DIR / f"{base_name}_{chunk_idx:03d}.pdf"
         pdf.output(str(out_path))
         log(f"Created chunk {out_path}")
         chunk_idx += 1
 
 
-def process_folder(folder: Path, ledger: Dict) -> None:
+def process_folder(folder: Path, ledger: Dict, base_name: str) -> None:
     converted_dir = scan_and_convert(folder, ledger)
-    merged_pdf = MERGED_DIR / f"{folder.name}.pdf"
+    merged_pdf = MERGED_DIR / f"{base_name}.pdf"
     merge_pdfs(converted_dir, merged_pdf)
-    chunk_pdf(merged_pdf, folder.name)
+    chunk_pdf(merged_pdf, base_name)
 
 
 def main() -> None:
+    global KB_DIR, CHUNK_DIR
+    source_path = input("Enter the full path of the folder to convert: ").strip()
+    KB_DIR = Path(source_path).expanduser()
+    if not KB_DIR.is_dir():
+        print(f"{KB_DIR} is not a valid directory")
+        return
+
+    base_name = input(
+        "Enter the base name for the merged and chunked PDF files: "
+    ).strip()
+    chunk_path = input("Enter the output directory for chunked files: ").strip()
+    CHUNK_DIR = Path(chunk_path).expanduser()
+
     ledger = load_ledger()
     MERGED_DIR.mkdir(exist_ok=True)
-    for item in KB_DIR.iterdir():
-        if item.is_dir():
-            process_folder(item, ledger)
+
+    process_folder(KB_DIR, ledger, base_name)
+
     save_ledger(ledger)
     log("Processing complete")
 
