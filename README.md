@@ -64,6 +64,16 @@ It will then:
 
 You can delete `ledger.json` to force a full reprocess.
 
+After splitting you can generate ebook-ready files using:
+
+```bash
+./generate_epub.py
+```
+
+This converts the chunked Markdown files in `Split/` to `.epub` format (and
+optionally `.mobi` if `kindlegen` is available), incrementing `epub_count` in
+`ledger.json`.
+
 ## Running Tests
 
 ```bash
