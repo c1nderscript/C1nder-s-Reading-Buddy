@@ -12,6 +12,13 @@ except ModuleNotFoundError:  # fall back for environments with PyPDF2 installed
     from PyPDF2 import PdfMerger, PdfReader
 from fpdf import FPDF
 
+FONT_PATH = Path(
+    os.environ.get(
+        "FONT_PATH",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    )
+)
+
 
 def markdown_to_pdf(src: Path, dest: Path) -> None:
     """Render a Markdown file to PDF using FPDF.
@@ -29,7 +36,7 @@ def markdown_to_pdf(src: Path, dest: Path) -> None:
     pdf.add_font(
         "DejaVu",
         "",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        str(FONT_PATH),
         uni=True,
     )
     pdf.set_font("DejaVu", size=12)
@@ -207,7 +214,7 @@ def chunk_pdf(pdf_path: Path, base_name: str) -> None:
         pdf.add_font(
             "DejaVu",
             "",
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            str(FONT_PATH),
             uni=True,
         )
         pdf.set_font("DejaVu", size=12)

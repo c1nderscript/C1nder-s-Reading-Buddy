@@ -38,7 +38,7 @@ packages from `requirements.txt`.
 source .venv/bin/activate
 ```
 
-Ensure `pandoc` is accessible in your `PATH` for converting DOCX and text files. Markdown files are handled directly via FPDF, which embeds the DejaVuSans TrueType font so that Unicode characters render correctly (no LaTeX engine required). The chunking step uses the same font to avoid encoding errors. Optionally set the environment variable `KB_DIR` to point to your knowledge base. The default is `/home/cinder/Documents/K_Knowledge_Base`.
+Ensure `pandoc` is accessible in your `PATH` for converting DOCX and text files. Markdown files are handled directly via FPDF, which embeds the DejaVuSans TrueType font so that Unicode characters render correctly (no LaTeX engine required). The chunking step uses the same font to avoid encoding errors. Optionally set the environment variables `KB_DIR` to point to your knowledge base and `FONT_PATH` to override the font used when generating PDFs. `FONT_PATH` defaults to `/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf` while `KB_DIR` defaults to `/home/cinder/Documents/K_Knowledge_Base`.
 
 ## Usage
 
