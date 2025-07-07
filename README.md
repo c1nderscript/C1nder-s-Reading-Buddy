@@ -1,99 +1,58 @@
-# KnowledgeBase Document Processor
+# KnowledgeBase Merger & PDF Chunker
 
-This repository provides two related pipelines. The original workflow converts a folder of documents into a Kindle-ready eBook. The updated workflow merges documents into PDFs and creates chunked PDF outputs.
+This repository provides a modular pipeline for consolidating a knowledge base into easy-to-read PDFs. It recursively converts supported files to PDF, merges them per subfolder and splits the results into ~20k word chunks. Each run records file hashes so unchanged files are skipped.
 
 ## Features
 
-- Recursively scan your knowledgebase for PDF, Markdown, DOCX, TXT and MDX files.
-- Convert the supported files into clean Markdown using `pandoc`.
-- Split large Markdown files into chunks of about 20,000 characters.
-- Shuffle the chunks to randomize reading order.
-- Convert the shuffled files to EPUB or MOBI format.
-- Track processed files to avoid duplication.
-- Merge documents in each subfolder into a single PDF and chunk it into ~20,000-word PDFs using `orchestrate_all.py`.
-- Run the entire workflow with a single script.
+- Recursively scan subfolders under the knowledge base directory.
+- Convert Markdown (`.md`/`.mdx`), text (`.txt`), DOCX and PDF files to PDF via `pandoc`.
+- Merge all PDFs in a subfolder into a single file in `Merged/`.
+- Split merged PDFs into ~20,000 word chunks saved in `Chunks/`.
+- Track processed files in `ledger.json` to avoid duplicate work.
+- Log actions in `Logs/`.
 
 ## Repository Structure
 
 ```text
 .
-├── Ingest/                # Converted Markdown files
 ├── Converted/             # Temporary PDFs per source folder
-├── Merged/                # Merged PDFs per folder
+├── Merged/                # Final merged PDFs per folder
 ├── Chunks/                # Chunked PDF outputs (~20k words)
-├── Split/                 # Split Markdown chunks (~20k characters)
-├── Kindle/                # Final EPUB or MOBI files
-├── Logs/                  # Logs tracking processed source files
-├── ingest_and_convert.py  # Python script for scanning and conversion
-├── orchestrate_all.py     # Pipeline to merge and chunk PDFs
-├── ingest_and_convert.sh  # Master bash script orchestrating the pipeline
-├── split_markdown.sh      # Bash script to split Markdown files into chunks
-├── shuffle_split_files.sh # Bash script to shuffle chunked Markdown files
-├── convert_to_kindle.sh   # Bash script to convert Markdown chunks to Kindle format
+├── Logs/                  # Log files
+├── orchestrate_all.py     # End-to-end workflow script
+├── ledger.json            # Processing ledger (auto-created)
 └── README.md              # This documentation file
 ```
 
 ## Prerequisites
 
 - Python 3
-- [Pandoc](https://pandoc.org/installing.html) for file conversions (required; `convert_to_kindle.sh` will exit if `pandoc` is missing)
-- `kindlegen` (optional, recommended for MOBI output)
-- Unix-like shell environment (Linux, macOS, WSL)
+- [pandoc](https://pandoc.org/installing.html)
+- `pip install -r requirements.txt` (installs `PyPDF2`, `fpdf` and `pytest`)
 
-## Setup
-
-1. Clone this repository and navigate into it.
-2. Install dependencies and verify `pandoc`:
-
-   ```bash
-   pandoc --version
-   ```
-
-   Optionally install kindlegen and ensure it is in your PATH. Set the `KB_DIR` environment variable or edit `ingest_and_convert.py` if your knowledge base lives elsewhere.
-
-3. Make the scripts executable:
-
-   ```bash
-   chmod +x ingest_and_convert.sh split_markdown.sh shuffle_split_files.sh convert_to_kindle.sh
-   ```
+Ensure `pandoc` is accessible in your `PATH`. Optionally set the environment variable `KB_DIR` to point to your knowledge base. The default is `/home/cinder/Documents/K_Knowledge_Base`.
 
 ## Usage
 
-Run the original Kindle pipeline with:
-```bash
-./ingest_and_convert.sh
-```
+Run the entire pipeline from the repository root:
 
-Run the PDF merging workflow with:
 ```bash
 python orchestrate_all.py
 ```
 
-### What Happens?
+This will:
+1. Scan each subfolder in `KB_DIR` for new or modified files.
+2. Convert supported files to PDF (stored under `Converted/`).
+3. Merge all PDFs in each subfolder into `Merged/<folder>.pdf`.
+4. Split the merged PDF into 20k-word chunks placed in `Chunks/`.
+5. Update `ledger.json` and write logs to `Logs/workflow.log`.
 
-1. **Scan & Convert** – `ingest_and_convert.py` scans your knowledgebase directory (defaults to `~/Documents/KnowledgeBase` or the value of `KB_DIR`), converts PDFs, DOCX, TXT, MDX, and Markdown to Markdown files in `Ingest/`. It skips files already processed by consulting `ledger.json`.
-2. **Split Markdown** – Large Markdown files are split into ~20,000-character chunks saved in `Split/` using `split_markdown.sh`.
-3. **Shuffle Chunks** – The chunk files are shuffled randomly by `shuffle_split_files.sh`.
-4. **Convert to Kindle Format** – Markdown chunks are converted to `.mobi` (if `kindlegen` is present) or `.epub` in `Kindle/` via `convert_to_kindle.sh`.
-
-## Tracking Processed Files
-
-The system keeps a JSON ledger called `ledger.json` that records file hashes and the last run time. This prevents re-processing unchanged files on subsequent runs. To reset processing, delete `ledger.json`.
-
-## Troubleshooting
-
-- If conversions fail, try running `pandoc` commands manually on problem files to debug.
-- Verify `PATH` settings if `pandoc` or `kindlegen` commands are not found.
-- Check file permissions on source and output directories.
+You can delete `ledger.json` to force a full reprocess.
 
 ## Running Tests
 
-To verify the scripts in this repository are executable, run the automated test suite:
-
 ```bash
-pip install -r requirements.txt  # if you have additional dependencies
 pytest
 ```
 
-The tests check that each workflow script has execute permissions so the CI pipeline can run them correctly.
-
+The tests validate that workflow scripts are executable.
