@@ -10,6 +10,7 @@ SCRIPT_FILES = [
     'shuffle_split_files.sh',
     'split_markdown.sh',
     'ingest_and_convert.py',
+    'generate_epub.py',
 ]
 
 @pytest.mark.parametrize('path', SCRIPT_FILES)
