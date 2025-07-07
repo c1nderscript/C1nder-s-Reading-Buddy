@@ -1,6 +1,6 @@
-# KnowledgeBase Markdown Merger & Kindle Converter
+# KnowledgeBase Document Processor
 
-This repository provides a simple pipeline to convert a folder of documents into a Kindle-ready eBook.
+This repository provides two related pipelines. The original workflow converts a folder of documents into a Kindle-ready eBook. The updated workflow merges documents into PDFs and creates chunked PDF outputs.
 
 ## Features
 
@@ -10,6 +10,7 @@ This repository provides a simple pipeline to convert a folder of documents into
 - Shuffle the chunks to randomize reading order.
 - Convert the shuffled files to EPUB or MOBI format.
 - Track processed files to avoid duplication.
+- Merge documents in each subfolder into a single PDF and chunk it into ~20,000-word PDFs using `orchestrate_all.py`.
 - Run the entire workflow with a single script.
 
 ## Repository Structure
@@ -17,10 +18,14 @@ This repository provides a simple pipeline to convert a folder of documents into
 ```text
 .
 ├── Ingest/                # Converted Markdown files
+├── Converted/             # Temporary PDFs per source folder
+├── Merged/                # Merged PDFs per folder
+├── Chunks/                # Chunked PDF outputs (~20k words)
 ├── Split/                 # Split Markdown chunks (~20k characters)
 ├── Kindle/                # Final EPUB or MOBI files
 ├── Logs/                  # Logs tracking processed source files
 ├── ingest_and_convert.py  # Python script for scanning and conversion
+├── orchestrate_all.py     # Pipeline to merge and chunk PDFs
 ├── ingest_and_convert.sh  # Master bash script orchestrating the pipeline
 ├── split_markdown.sh      # Bash script to split Markdown files into chunks
 ├── shuffle_split_files.sh # Bash script to shuffle chunked Markdown files
@@ -54,9 +59,14 @@ This repository provides a simple pipeline to convert a folder of documents into
 
 ## Usage
 
-Run the full pipeline with:
+Run the original Kindle pipeline with:
 ```bash
 ./ingest_and_convert.sh
+```
+
+Run the PDF merging workflow with:
+```bash
+python orchestrate_all.py
 ```
 
 ### What Happens?
