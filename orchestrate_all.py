@@ -160,7 +160,13 @@ def chunk_pdf(pdf_path: Path, base_name: str) -> None:
         pdf = FPDF()
         pdf.add_page()
         pdf.set_auto_page_break(True, margin=15)
-        pdf.set_font("Arial", size=12)
+        pdf.add_font(
+            "DejaVu",
+            "",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            uni=True,
+        )
+        pdf.set_font("DejaVu", size=12)
         pdf.multi_cell(0, 10, chunk_text)
         out_path = CHUNK_DIR / f"{base_name}_{chunk_idx:03d}.pdf"
         pdf.output(str(out_path))
