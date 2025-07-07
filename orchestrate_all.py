@@ -177,6 +177,27 @@ def process_folder(folder: Path, ledger: Dict, base_name: str) -> None:
 
 def main() -> None:
     global KB_DIR, CHUNK_DIR
+
+    ledger = load_ledger()
+
+    existing_dir = ledger.get("output_dir")
+    if existing_dir:
+        use_existing = (
+            input(f"Use existing output directory {existing_dir}? [Y/n] ")
+            .strip()
+            .lower()
+        )
+        if use_existing in {"", "y", "yes"}:
+            CHUNK_DIR = Path(existing_dir).expanduser()
+        else:
+            chunk_path = input("Enter the output directory for chunked files: ")
+            CHUNK_DIR = Path(chunk_path.strip()).expanduser()
+            ledger["output_dir"] = str(CHUNK_DIR)
+    else:
+        chunk_path = input("Enter the output directory for chunked files: ")
+        CHUNK_DIR = Path(chunk_path.strip()).expanduser()
+        ledger["output_dir"] = str(CHUNK_DIR)
+
     source_path = input("Enter the full path of the folder to convert: ").strip()
     KB_DIR = Path(source_path).expanduser()
     if not KB_DIR.is_dir():
@@ -186,10 +207,7 @@ def main() -> None:
     base_name = input(
         "Enter the base name for the merged and chunked PDF files: "
     ).strip()
-    chunk_path = input("Enter the output directory for chunked files: ").strip()
-    CHUNK_DIR = Path(chunk_path).expanduser()
 
-    ledger = load_ledger()
     MERGED_DIR.mkdir(exist_ok=True)
 
     process_folder(KB_DIR, ledger, base_name)

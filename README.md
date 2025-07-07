@@ -48,15 +48,18 @@ Run the entire pipeline from the repository root:
 python orchestrate_all.py
 ```
 
-The script now prompts for:
+When run for the first time the script asks for the directory where chunked
+files should be written and stores that choice in `ledger.json`. On subsequent
+runs you can simply confirm the saved location or enter a new one.
+
+You will be prompted for:
 1. The full path to the folder of documents to convert.
 2. A base name for the merged PDF and its chunks.
-3. The output directory for the chunked files.
 
 It will then:
 1. Convert supported files in the chosen folder to PDF (stored under `Converted/`).
 2. Merge them into `Merged/<base_name>.pdf`.
-3. Split the merged PDF into 20k‑word chunks placed in the specified output directory.
+3. Split the merged PDF into 20k‑word chunks placed in the configured output directory.
 4. Update `ledger.json` and write logs to `Logs/workflow.log`.
 
 You can delete `ledger.json` to force a full reprocess.
