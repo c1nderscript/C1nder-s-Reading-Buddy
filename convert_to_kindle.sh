@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Use BASE_DIR if provided, otherwise default to the current directory
 BASE_DIR="${BASE_DIR:-$(pwd)}"
