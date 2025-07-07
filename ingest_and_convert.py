@@ -14,14 +14,30 @@ INGEST_DIR = Path("./Ingest")
 LOG_DIR = Path("./Logs")
 LEDGER_PATH = Path("ledger.json")
 
-# Supported file extensions and their pandoc target
+# Supported file extensions.
+# Markdown/MDX files are copied directly; everything else uses pandoc.
 SUPPORTED_EXTS = {
     ".pdf": "markdown",
-    ".md": None,       # just copy
-    ".mdx": None,      # copy but can be stripped later
+    ".md": None,
+    ".mdx": None,
     ".docx": "markdown",
     ".txt": "markdown",
+    ".html": "markdown",
+    ".htm": "markdown",
+    ".toml": "markdown",
+    ".json": "markdown",
+    ".xml": "markdown",
+    ".tex": "markdown",
+    ".rst": "markdown",
+    ".epub": "markdown",
+    ".adoc": "markdown",
+    ".rtf": "markdown",
+    ".yaml": "markdown",
+    ".yml": "markdown",
 }
+
+# Extensions that can be copied without pandoc
+COPY_EXTS = {".md", ".mdx", ".txt"}
 
 def load_ledger():
     if LEDGER_PATH.exists():
@@ -50,11 +66,17 @@ def compute_hash(path: Path) -> str:
     return hash_obj.hexdigest()
 
 def convert_to_markdown(src_path: Path, dest_path: Path) -> bool:
-    # For md/mdx/txt just copy
-    if src_path.suffix in [".md", ".mdx", ".txt"]:
+    """Convert a supported file to Markdown.
+
+    Files with extensions in ``COPY_EXTS`` are copied directly. Everything else
+    is passed through pandoc with a small retry loop.
+    """
+
+    if src_path.suffix in COPY_EXTS:
         dest_path.write_text(src_path.read_text(encoding="utf-8"), encoding="utf-8")
         return True
-    # For pdf/docx use pandoc with retry logic
+
+    # For other formats use pandoc with retry logic
     attempts = 0
     while attempts < 3:
         try:

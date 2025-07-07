@@ -40,7 +40,27 @@ CHUNK_DIR = Path("Chunks")
 LOG_DIR = Path("Logs")
 LEDGER_PATH = Path("ledger.json")
 
-SUPPORTED_EXTS = {".pdf", ".md", ".mdx", ".txt", ".docx"}
+# Additional formats like HTML, TOML and common ebook types are
+# converted via pandoc. Markdown/MDX is rendered directly with FPDF.
+SUPPORTED_EXTS = {
+    ".pdf",
+    ".md",
+    ".mdx",
+    ".txt",
+    ".docx",
+    ".html",
+    ".htm",
+    ".toml",
+    ".json",
+    ".xml",
+    ".tex",
+    ".rst",
+    ".epub",
+    ".adoc",
+    ".rtf",
+    ".yaml",
+    ".yml",
+}
 
 LOG_FILE = LOG_DIR / "workflow.log"
 

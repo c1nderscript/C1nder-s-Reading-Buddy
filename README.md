@@ -6,7 +6,7 @@ This repository provides a modular pipeline for consolidating a knowledge base i
 
 - Recursively scan subfolders under the knowledge base directory.
 - Convert Markdown (`.md`/`.mdx`) directly to PDF using FPDF with a Unicode font.
-- Convert text (`.txt`) and DOCX files to PDF via `pandoc`.
+- Convert text (`.txt`), HTML, TOML, DOCX and other common e-book formats via `pandoc`.
 - Merge all PDFs in a subfolder into a single file in `Merged/`.
 - Split merged PDFs into ~20,000 word chunks saved in `Chunks/`.
 - Track processed files in `ledger.json` to avoid duplicate work.
