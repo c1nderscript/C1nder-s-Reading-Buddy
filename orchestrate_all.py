@@ -112,6 +112,9 @@ def convert_file(src: Path, dest: Path) -> bool:
 
     if ext == ".pdf":
         dest.write_bytes(src.read_bytes())
+        if dest.stat().st_size == 0:
+            dest.unlink(missing_ok=True)
+            return False
         return True
 
     if ext in {".md", ".mdx"}:
@@ -120,6 +123,7 @@ def convert_file(src: Path, dest: Path) -> bool:
             return True
         except Exception as e:  # noqa: BLE001
             log(f"Conversion failed for {src}: {e}")
+            dest.unlink(missing_ok=True)
             return False
 
     tmp_md = dest.with_suffix(".tmp.md")
@@ -134,6 +138,7 @@ def convert_file(src: Path, dest: Path) -> bool:
     except subprocess.CalledProcessError as e:
         log(f"Conversion failed for {src}: {e}")
         tmp_md.unlink(missing_ok=True)
+        dest.unlink(missing_ok=True)
         return False
 
 
@@ -161,13 +166,21 @@ def scan_and_convert(folder: Path, ledger: Dict) -> Path:
 def merge_pdfs(pdf_dir: Path, output_path: Path) -> None:
     merger = PdfMerger()
     pdf_files = sorted(pdf_dir.glob("*.pdf"))
+    valid_pdfs = []
     for pdf in pdf_files:
-        merger.append(str(pdf))
+        if pdf.stat().st_size == 0:
+            log(f"Skipping empty PDF {pdf}")
+            continue
+        try:
+            merger.append(str(pdf))
+            valid_pdfs.append(pdf)
+        except Exception as e:  # noqa: BLE001
+            log(f"Failed to append {pdf}: {e}")
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("wb") as f:
         merger.write(f)
     merger.close()
-    log(f"Merged {len(pdf_files)} PDFs into {output_path}")
+    log(f"Merged {len(valid_pdfs)} PDFs into {output_path}")
 
 
 def chunk_pdf(pdf_path: Path, base_name: str) -> None:
