@@ -5,7 +5,7 @@ This repository provides a modular pipeline for consolidating a knowledge base i
 ## Features
 
 - Recursively scan subfolders under the knowledge base directory.
-- Convert Markdown (`.md`/`.mdx`) directly to PDF using FPDF.
+- Convert Markdown (`.md`/`.mdx`) directly to PDF using FPDF with a Unicode font.
 - Convert text (`.txt`) and DOCX files to PDF via `pandoc`.
 - Merge all PDFs in a subfolder into a single file in `Merged/`.
 - Split merged PDFs into ~20,000 word chunks saved in `Chunks/`.
@@ -38,7 +38,7 @@ packages from `requirements.txt`.
 source .venv/bin/activate
 ```
 
-Ensure `pandoc` is accessible in your `PATH` for converting DOCX and text files. Markdown files are handled directly via FPDF, so no LaTeX engine is required. Optionally set the environment variable `KB_DIR` to point to your knowledge base. The default is `/home/cinder/Documents/K_Knowledge_Base`.
+Ensure `pandoc` is accessible in your `PATH` for converting DOCX and text files. Markdown files are handled directly via FPDF, which now embeds the DejaVuSans TrueType font so that Unicode characters render correctly (no LaTeX engine required). Optionally set the environment variable `KB_DIR` to point to your knowledge base. The default is `/home/cinder/Documents/K_Knowledge_Base`.
 
 ## Usage
 
