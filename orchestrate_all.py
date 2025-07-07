@@ -58,6 +58,7 @@ def compute_hash(path: Path) -> str:
             h.update(chunk)
     return h.hexdigest()
 
+# This helper mirrors the convert_file function in ingest_and_convert.py
 
 def convert_file(src: Path, dest: Path) -> bool:
     if src.suffix.lower() == ".pdf":
