@@ -12,6 +12,17 @@ import hashlib
 KB_DIR = Path(os.environ.get("KB_DIR", Path.home() / "Documents/KnowledgeBase"))
 INGEST_DIR = Path("./Ingest")
 LOG_DIR = Path("./Logs")
+LOG_FILE = LOG_DIR / "workflow.log"
+
+
+def log(message: str) -> None:
+    """Append a timestamped message to the log file under ``LOG_DIR``."""
+    LOG_DIR.mkdir(exist_ok=True)
+    with LOG_FILE.open("a", encoding="utf-8") as f:
+        timestamp = datetime.utcnow().isoformat()
+        line = f"{timestamp} - {message}"
+        print(line)
+        f.write(line + "\n")
 LEDGER_PATH = Path("ledger.json")
 
 # Supported file extensions.
@@ -74,6 +85,7 @@ def convert_to_markdown(src_path: Path, dest_path: Path) -> bool:
 
     if src_path.suffix in COPY_EXTS:
         dest_path.write_text(src_path.read_text(encoding="utf-8"), encoding="utf-8")
+        log(f"Copied {src_path} to {dest_path}")
         return True
 
     # For other formats use pandoc with retry logic
@@ -86,19 +98,19 @@ def convert_to_markdown(src_path: Path, dest_path: Path) -> bool:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
+            log(f"Converted {src_path} to {dest_path}")
             return True
         except subprocess.CalledProcessError as e:
             attempts += 1
-            print(
-                f"Error converting {src_path} (attempt {attempts}): {e.stderr.decode()}",
-                file=sys.stderr,
-            )
+            error_msg = f"Error converting {src_path} (attempt {attempts}): {e.stderr.decode()}"
+            print(error_msg, file=sys.stderr)
+            log(error_msg)
             if attempts >= 3:
                 return False
 
 def main():
     INGEST_DIR.mkdir(exist_ok=True)
-    LOG_DIR.mkdir(exist_ok=True)
+    log("Starting ingestion")
 
     ledger = load_ledger()
     file_hashes = ledger["file_hashes"]
@@ -112,21 +124,21 @@ def main():
 
             file_hash = compute_hash(filepath)
             if file_hashes.get(str(filepath)) == file_hash:
-                print(f"Skipping already processed: {filepath}")
+                log(f"Skipping already processed: {filepath}")
                 continue
 
             # Destination file in Ingest, convert extension to .md
             dest_filename = filepath.stem + ".md"
             dest_path = INGEST_DIR / dest_filename
 
-            print(f"Processing: {filepath}")
+            log(f"Processing {filepath}")
             success = convert_to_markdown(filepath, dest_path)
             if success:
                 file_hashes[str(filepath)] = file_hash
                 new_processed += 1
 
     save_ledger(ledger)
-    print(f"Conversion complete. {new_processed} new files processed.")
+    log(f"Conversion complete. {new_processed} new files processed.")
 
 if __name__ == "__main__":
     main()
