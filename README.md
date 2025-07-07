@@ -28,7 +28,14 @@ This repository provides a modular pipeline for consolidating a knowledge base i
 
 - Python 3
 - [pandoc](https://pandoc.org/installing.html)
-- `pip install -r requirements.txt` (installs `PyPDF2`, `fpdf` and `pytest`)
+
+Run `./configure.sh` once to create a virtual environment and install the
+packages from `requirements.txt`.
+
+```
+./configure.sh
+source .venv/bin/activate
+```
 
 Ensure `pandoc` is accessible in your `PATH`. Optionally set the environment variable `KB_DIR` to point to your knowledge base. The default is `/home/cinder/Documents/K_Knowledge_Base`.
 

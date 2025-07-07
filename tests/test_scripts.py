@@ -3,6 +3,7 @@ import pytest
 
 # List of script paths relative to repository root
 SCRIPT_FILES = [
+    'configure.sh',
     'convert_to_kindle.sh',
     'ingest_and_convert.sh',
     'merge.sh',
