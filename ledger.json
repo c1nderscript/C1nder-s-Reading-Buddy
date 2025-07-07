@@ -1,5 +1,34 @@
 {
   "file_hashes": {},
   "last_run": null,
-  "epub_count": 0
+  "epub_count": 0,
+  "folders": {
+    "book": {
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/CONTRIBUTING.md": "6a1235ea8814c33b8c7eb29a3c6fd99bc787e53d0cc607226c9a380e8fdfe059",
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/ADMIN_TASKS.md": "036e5e2b403dda2fa624e8b20db7d675d568b26b815338bf7737b21233b1cb6a",
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/style-guide.md": "037cf0a36b3496d7c17377536ef14ff4358ad7cd715f9b09bcee0cd40744b8d4",
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/README.md": "4eb01715098781e407c081f230f974843b8439e4f5f85ce635c61ea6c58ee8a5",
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/TODO.md": "fc640db86cb847ef5f1b5e1b96002f472197fb22bf708be0d8b44c224114ee91",
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/rustfmt.toml": "ad860a6eb3241ca19b7d0fe82a055b42998f5513883fddd889266f2bd2117dff",
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/book.toml": "13cfcf5c1fc5c59076a0d6e463eda91526fde676571ef203de528ba4ec29b8fc",
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/Cargo.toml": "da07048fd8475b73000914cf81281cb099f832b9bef17dbd8c80055d56d1b960",
+      "/home/cinder/Documents/K_Knowledge_Base/Rust-Lang-Docs/book/The Rust Programming Language - The Rust Programming Language.html": "013c3d1f38687ec888680be4a83b51b061dfb2e73cb5b962a1cffa1a800dde01"
+    },
+    "Trello-API-Docs": {
+      "/home/cinder/Documents/K_Knowledge_Base/Trello-API-Docs/trello_api_docs.md": "8aa7326d0f8dd00b5f2af073c5353473f84ce24d47786206bcc0fb0d7bfc53c4"
+    },
+    "Discord-API-Docs": {
+      "/home/cinder/Documents/K_Knowledge_Base/Discord-API-Docs/CONTRIBUTING.md": "c93dd15f3f221452d735f5a418827504145744455fc8d76e7a389f696fd36b68",
+      "/home/cinder/Documents/K_Knowledge_Base/Discord-API-Docs/CODE_OF_CONDUCT.md": "c9c83814d37c2c4ad07745b741424ba7c164df80e88fdcf8ddfc9b2a2ccb63e4",
+      "/home/cinder/Documents/K_Knowledge_Base/Discord-API-Docs/README.md": "b53d14e34598ad9fc77406ea42ed23f98478ad777ffd7ba47e95e69fa74cd67e"
+    },
+    "c1nder-codex": {
+      "/home/cinder/Documents/A_Documentation/c1nder-codex/templates.md": "5cb40c7bed9296788b794f16fd92ee12de1012884cacab818d5de7f6acd963a3",
+      "/home/cinder/Documents/A_Documentation/c1nder-codex/overview.md": "fa9c1a0d219485bfb4670605607564b6c5e833eac6bb32e714ac8465dfdd57aa",
+      "/home/cinder/Documents/A_Documentation/c1nder-codex/advanced-implementation.md": "35372421b9beab3efc22b6d4d97df6e2b82efc77a057b1f90ffd0a2e5e254e1f",
+      "/home/cinder/Documents/A_Documentation/c1nder-codex/README.md": "aefca184a726b2238432114b4071c551af6d95540a7f3a3c6a53555577abdefe"
+    },
+    "Redis-Docs": {}
+  },
+  "output_dir": "/home/cinder/Documents/A_Documentation/ReadingList/Reading"
 }
