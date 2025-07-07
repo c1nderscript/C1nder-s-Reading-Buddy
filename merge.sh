@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 INGEST_DIR="./Ingest"
 MERGED_DIR="./Merged"
