@@ -19,6 +19,10 @@ def markdown_to_pdf(src: Path, dest: Path) -> None:
     This avoids pandoc's default pdflatex dependency.
     """
     text = src.read_text(encoding="utf-8")
+    # FPDF 1.x does not support characters outside the Basic Multilingual Plane
+    # (U+0000–U+FFFF). Filter them out to prevent index errors when writing
+    # the PDF.
+    sanitized = "".join(ch for ch in text if ord(ch) <= 0xFFFF)
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(True, margin=15)
@@ -29,7 +33,7 @@ def markdown_to_pdf(src: Path, dest: Path) -> None:
         uni=True,
     )
     pdf.set_font("DejaVu", size=12)
-    for line in text.splitlines():
+    for line in sanitized.splitlines():
         pdf.multi_cell(0, 10, line)
     pdf.output(str(dest))
 
