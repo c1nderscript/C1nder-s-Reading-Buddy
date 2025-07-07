@@ -6,7 +6,10 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict
 
-from PyPDF2 import PdfMerger, PdfReader
+try:
+    from pypdf import PdfMerger, PdfReader
+except ModuleNotFoundError:  # fall back for environments with PyPDF2 installed
+    from PyPDF2 import PdfMerger, PdfReader
 from fpdf import FPDF
 
 KB_DIR = Path(os.environ.get("KB_DIR", "/home/cinder/Documents/K_Knowledge_Base"))
