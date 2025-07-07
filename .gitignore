@@ -4,6 +4,8 @@ Split/
 Kindle/
 Logs/
 Merged/
+Converted/
+ledger.json
 *.epub
 *.mobi
 *.log
